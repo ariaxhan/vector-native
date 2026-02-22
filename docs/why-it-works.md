@@ -51,6 +51,19 @@ Tokens: ["●", "⊕"]
 
 **Early Evidence:** Initial API tests (gpt-4o-mini, 5 scenarios) showed 88.8% average completion reduction in strict mode. However, results vary dramatically—programmatic tasks may see 90%+ reduction while creative tasks benefit from less compression. The real value is precision: clearer intent, less ambiguity.
 
+**Empirical Validation (2026-02-22):** Using SAE (Sparse Autoencoder) attribution on Gemma-2-2b, we measured **feature density** (active features per character):
+
+| Symbol | Density | vs Equivalent Word | Ratio |
+|--------|---------|-------------------|-------|
+| ● | 865 features/char | "attention" = 94 | **9.2x** |
+| ⊕ | 912 features/char | "add" = 256 | **3.6x** |
+| → | 826 features/char | "then" = 165 | **5.0x** |
+| ≠ | 809 features/char | "not" = 191 | **4.2x** |
+
+**This confirms the mechanism:** VN symbols activate dramatically more internal representations per character than their word equivalents. The protocol works by optimizing **density**, not just token count.
+
+📖 Full methodology and results: [`empirical-validation.md`](./empirical-validation.md)
+
 ### High-Level Reasoning: Why Leveraging Pre-Trained Associations Reduces Model Cognitive Load
 
 At a conceptual level, natural language is full of ambiguity and filler words. Vector-Native explores whether structured symbols can reduce this ambiguity. The symbols leverage pre-trained associations (like `●` for importance or `⊕` for addition) from training data. The system prompt teaches the model to use these associations for clearer communication. The goal is precision first, efficiency second. By eliminating filler words and ambiguity, intent becomes clearer—which may enable more reliable A2A communication.
